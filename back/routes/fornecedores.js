@@ -18,6 +18,10 @@ router.get("/:id", (req, res) => {
     res.send(fornecedor);
 });
 
+router.get("/", (req,res) => {
+
+    res.send(database.fornecedores);
+})
 
 router.post("/", (req, res) => {
 

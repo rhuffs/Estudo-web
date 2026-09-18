@@ -1,14 +1,32 @@
-
 import axios from "axios";
-import { useState } from "react";
-import Idade from "./Idade";
+import { useState, useEffect } from "react";
+import Tabela from "./Tabela";
 
 export default function Fornecedores() {
     const [fornecedor, setFornecedor] = useState(null);
     const [entrada, setEntrada] = useState("");
     const [exibirErro, setExibirErro] = useState(false);
-
     const [nome, setNome] = useState("");
+    const [fornecedorT, setFornecedorT] = useState([]);
+
+    useEffect(() => {
+        async function buscarTodosFornecedores() {
+            try {
+                const response = await axios.get(
+                    "http://localhost:3001/fornecedores"
+                );
+
+                console.log(response.data);
+
+                setFornecedorT(response.data);
+            } catch (error) {
+                console.log(error);
+                setExibirErro(true);
+            }
+        }
+
+        buscarTodosFornecedores();
+    }, []);
 
     async function buscarFornecedor() {
         try {
@@ -18,7 +36,6 @@ export default function Fornecedores() {
 
             setFornecedor(response.data);
             setExibirErro(false);
-
         } catch (error) {
             console.log(error);
 
@@ -39,15 +56,14 @@ export default function Fornecedores() {
             console.log(response.data);
 
             setNome("");
-
         } catch (error) {
             console.log(error);
         }
     }
 
+
     return (
         <div>
-
             <h1>Fornecedores</h1>
 
             <h2>Buscar fornecedor</h2>
@@ -71,32 +87,26 @@ export default function Fornecedores() {
                 <div>
                     <p>ID: {fornecedor.id}</p>
                     <p>Nome: {fornecedor.nome}</p>
+
+                    <button onClick = {() => {
+                        setFornecedor(null);
+                        setEntrada("");
+                    }} > Voltar</button>
+
                 </div>
             )}
 
             <hr />
-
-            <h2>Cadastrar fornecedor</h2>
-
-            <input
-                type="text"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-                placeholder="Nome do fornecedor"
-            />
-
-            <button onClick={cadastrarFornecedor}>
-                Cadastrar
-            </button>
             <br></br>
-            <br></br>
-            <div>
-                <Idade />
-            </div>
 
+
+
+            {!fornecedor && ( 
+                <div>
+                    <h2>Todos os fornecedores</h2>
+                    <Tabela fornecedores={fornecedorT} />
+                </div>)
+            }
         </div>
-
-
     );
 }
-
