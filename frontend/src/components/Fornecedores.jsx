@@ -1,13 +1,20 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Tabela from "./Tabela";
+import Button from '@mui/material/Button';
+import OutlinedInput from '@mui/material/OutlinedInput';
+
+import Stack from '@mui/material/Stack';
+
 
 export default function Fornecedores() {
     const [fornecedor, setFornecedor] = useState(null);
     const [entrada, setEntrada] = useState("");
+    const [entradaRemove, setEntradaRemove] = useState("");
     const [exibirErro, setExibirErro] = useState(false);
     const [nome, setNome] = useState("");
     const [fornecedorT, setFornecedorT] = useState([]);
+    const [flagCadastro, setFlagCadastro] = useState(true);
 
     useEffect(() => {
         async function buscarTodosFornecedores() {
@@ -26,7 +33,7 @@ export default function Fornecedores() {
         }
 
         buscarTodosFornecedores();
-    }, []);
+    }, [flagCadastro]);
 
     async function buscarFornecedor() {
         try {
@@ -56,57 +63,118 @@ export default function Fornecedores() {
             console.log(response.data);
 
             setNome("");
+            setFlagCadastro(!flagCadastro);
         } catch (error) {
             console.log(error);
         }
     }
 
+    async function removerFornecedor() {
+        try {
+            const response = await axios.delete(
+                `http://localhost:3001/fornecedores/${entradaRemove}`
+            );
+
+            console.log(response.data);
+            setFlagCadastro(!flagCadastro);
+            setEntradaRemove("");
+        } catch (error) {
+            console.log(error);
+            setEntradaRemove("");
+        }
+    }
+
 
     return (
-        <div>
+        <Stack>
             <h1>Fornecedores</h1>
 
             <h2>Buscar fornecedor</h2>
 
-            <input
+            <OutlinedInput
                 type="number"
                 value={entrada}
                 onChange={(e) => setEntrada(e.target.value)}
                 placeholder="Digite o ID"
+                
             />
 
-            <button onClick={buscarFornecedor}>
+            <Button onClick={buscarFornecedor}>
                 Buscar Fornecedor
-            </button>
+            </Button>
 
             {exibirErro && (
                 <p>Fornecedor não encontrado.</p>
             )}
 
             {fornecedor && (
-                <div>
+                <Stack>
                     <p>ID: {fornecedor.id}</p>
                     <p>Nome: {fornecedor.nome}</p>
 
-                    <button onClick = {() => {
+                    <Button onClick = {() => {
                         setFornecedor(null);
                         setEntrada("");
-                    }} > Voltar</button>
+                    }} > Voltar</Button>
 
-                </div>
+                </Stack>
             )}
 
-            <hr />
+        
             <br></br>
 
 
 
             {!fornecedor && ( 
-                <div>
+                <Stack>
                     <h2>Todos os fornecedores</h2>
                     <Tabela fornecedores={fornecedorT} />
-                </div>)
+                </Stack>)
             }
-        </div>
+
+            
+            <br />
+
+            <Stack>
+
+                <h2>Cadastrar Fornecedor </h2>
+
+                <OutlinedInput
+                    type="text"
+                    value={nome}
+                    onChange={(e) => setNome(e.target.value)}
+                    placeholder="Digite o nome do novo Fornecedor" >
+                
+                </OutlinedInput>
+
+                <Button onClick={cadastrarFornecedor}>
+                    cadastrar Fornecedor
+                </Button>
+
+            </Stack>
+
+            
+            <br />
+
+            <Stack>
+
+                <h2>Remover Fornecedor </h2>
+
+                <OutlinedInput
+                    type="text"
+                    value={entradaRemove}
+                    onChange={(e) => setEntradaRemove(e.target.value)}
+                    placeholder="Digite o id do fornecedor que deseja remover" >
+                
+                </OutlinedInput>
+
+                <Button onClick={removerFornecedor}>
+                    Remover Fornecedor
+                </Button>
+
+            </Stack>
+
+
+        </Stack>
     );
 }

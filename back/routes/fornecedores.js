@@ -35,5 +35,26 @@ router.post("/", (req, res) => {
     res.status(201).send(novoFornecedor);
 });
 
+router.delete("/:id", (req,res) => {
+    const id = Number(req.params.id);
+
+    const indexFornecedor = database.fornecedores.findIndex(
+        (fornecedor) => fornecedor.id === id
+    );
+
+    if (indexFornecedor === -1) {
+        return res.status(404).send("Fornecedor não encontrado");
+    }
+
+    database.fornecedores.splice(indexFornecedor, 1);
+
+    res.json({
+        mensagem: "Usuario removido com sucesso"
+    });
+
+
+});
+
+
 
 module.exports = router;

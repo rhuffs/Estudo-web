@@ -1,4 +1,10 @@
 
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import Stack from '@mui/material/Stack';
 
 export default function Tabela({fornecedores}) {
     
@@ -6,25 +12,25 @@ export default function Tabela({fornecedores}) {
 
 
     return (
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nome</th>
-                    </tr>
-                </thead>
+        <Stack>
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell>ID</TableCell>
+                        <TableCell>Nome</TableCell>
+                    </TableRow>
+                </TableHead>
 
-                <tbody>
+                <TableBody>
                     {fornecedores.map((fornecedor)=>(
-                        <tr key = {fornecedor.id}>
-                            <td>{fornecedor.id}</td>
-                            <td>{fornecedor.nome}</td>
-                        </tr>
+                        <TableRow key = {fornecedor.id}>
+                            <TableCell>{fornecedor.id}</TableCell>
+                            <TableCell>{fornecedor.nome}</TableCell>
+                        </TableRow>
                     ))}
-                </tbody>
-            </table>
+                </TableBody>
+            </Table>
 
-        </div>
+        </Stack>
     )
 }
