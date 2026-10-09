@@ -2,25 +2,26 @@ const express = require("express");
 const cors = require("cors");
 const pgp = require('pg-promise');
 const app = express();
-
 app.use(express.json());
 app.use(cors());
 
 const PORTA = 3001;
 
-const clientesRouter = require("./routes/clientes");
-const fornecedoresRouter = require("./routes/fornecedores");
-const livrosRouter = require("./routes/livros");
-const leitoresRouter = require("./routes/leitores");
-const emprestimoRouter = require("./routes/emprestimo");
-const autoresRouter = require("./routes/autores");
+const clientesRoutes = require("./routes/clientes");
+const fornecedoresRoutes = require("./routes/fornecedores");
+const livrosRoutes = require("./src/livros/livros.routes");
+const leitoresRoutes = require("./src/leitores/leitores.routes");
+const emprestimoRoutes = require("./src/emprestimos/emprestimos.routes");
+const autoresRoutes = require("./src/autores/autores.routes");
 
-app.use("/clientes", clientesRouter);
-app.use("/fornecedores", fornecedoresRouter);
-app.use("/livros", livrosRouter);
-app.use("/leitores", leitoresRouter);
-app.use("/emprestimo", emprestimoRouter);
-app.use("/autores", autoresRouter);
+app.use("/clientes", clientesRoutes);
+app.use("/fornecedores", fornecedoresRoutes);
+app.use(livrosRoutes);
+app.use(leitoresRoutes);
+app.use(emprestimoRoutes);
+app.use(autoresRoutes);
+app.use(autoresRoutes);
+
 
 
 app.get("/", (req, res) => {
